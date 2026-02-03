@@ -217,13 +217,7 @@ export default function AIChatScreen() {
             setMessages(prev => [...prev, aiMessage]);
         } catch (error) {
             console.error('AI Chat Error:', error);
-            const errorMessage: Message = {
-                id: (Date.now() + 1).toString(),
-                text: "I'm sorry, I'm having trouble connecting to my divine knowledge base right now. Please try again in a moment.",
-                sender: 'ai',
-                timestamp: Date.now()
-            };
-            setMessages(prev => [...prev, errorMessage]);
+            // This is now handled within askQuranAI to return descriptive string errors
         } finally {
             setLoading(false);
             setTimeout(() => {
