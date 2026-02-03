@@ -1,0 +1,22 @@
+export const MOTIVATION_QUOTES = [
+    { id: 1, text: "The best among you are those who have the best manners and best character.", author: "Prophet Muhammad (PBUH)", category: "CHARACTER" },
+    { id: 2, text: "The richest of the rich is the one who is not a prisoner to greed.", author: "Imam Ali (R.A)", category: "WEALTH" },
+    { id: 3, text: "The bravest heart is the one that stays close to Allah, even when it's in pain.", author: "Omar Suleiman", category: "SPIRIT" },
+    { id: 4, text: "Patience is a treasure from the treasures of Paradise.", author: "Imam Al-Ghazali", category: "PATIENCE" },
+    { id: 5, text: "Detach yourself from the world and your heart will find peace.", author: "Imam Al-Shafi'i", category: "PEACE" },
+    { id: 6, text: "Indeed, with hardship comes ease.", author: "Quran (94:6)", category: "HOPE" },
+    { id: 7, text: "Richness is not having many possessions, but true wealth is contentment of the soul.", author: "Prophet Muhammad (PBUH)", category: "SOUL" },
+    { id: 8, text: "Knowledge enlivens the soul.", author: "Imam Ali (R.A)", category: "KNOWLEDGE" },
+    { id: 9, text: "Dua is the weapon of the believer.", author: "Prophet Muhammad (PBUH)", category: "PRAYER" },
+    { id: 10, text: "When you forget that you need Allah, He puts you in a situation that causes you to call upon Him.", author: "Omar Suleiman", category: "GUIDANCE" },
+    { id: 11, text: "So remember Me; I will remember you.", author: "Quran (2:152)", category: "REMEMBRANCE" },
+    { id: 12, text: "And He is with you wherever you are.", author: "Quran (57:4)", category: "PRESENCE" },
+    { id: 13, text: "Do not despair of the mercy of Allah.", author: "Quran (39:53)", category: "MERCY" },
+    { id: 14, text: "Allah does not charge a soul except [with that within] its capacity.", author: "Quran (2:286)", category: "STRENGTH" },
+    { id: 15, text: "The world is a prison for the believer and a paradise for the disbeliever.", author: "Prophet Muhammad (PBUH)", category: "WORSHIP" },
+    { id: 16, text: "Raise your words, not your voice. It is rain that grows flowers, not thunder.", author: "Rumi", category: "WISDOM" },
+    { id: 17, text: "The wound is the place where the Light enters you.", author: "Rumi", category: "HEALING" },
+    { id: 22, text: "What you see in other people is a reflection of yourself.", author: "Omar Suleiman", category: "REFLECTION" },
+    { id: 23, text: "Whatever is written for you will come to you even if it is between two mountains.", author: "Imam Al-Ghazali", category: "DESTINY" },
+    { id: 25, text: "Speak a good word or remain silent.", author: "Prophet Muhammad (PBUH)", category: "MANNERS" }
+];
