@@ -65,7 +65,10 @@ export const fetchSurahs = async (): Promise<Surah[]> => {
         // Check cache first
         const cached = await storage.getString('surahs');
         if (cached) {
-            return JSON.parse(cached);
+            const parsed = JSON.parse(cached);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                return parsed;
+            }
         }
 
         // Fetch from API

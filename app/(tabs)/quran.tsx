@@ -25,21 +25,24 @@ export default function QuranScreen() {
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
-    useEffect(() => {
-        const loadData = async () => {
-            if (surahs.length === 0) {
-                setLoading(true);
-                try {
-                    const data = await fetchSurahs();
-                    setSurahs(data);
-                } catch (error) {
-                    console.error("Failed to fetch surahs", error);
-                } finally {
-                    setLoading(false);
-                }
+    const loadData = async () => {
+        setLoading(true);
+        try {
+            const data = await fetchSurahs();
+            if (data && data.length > 0) {
+                setSurahs(data);
             }
-        };
-        loadData();
+        } catch (error) {
+            console.error("Failed to fetch surahs", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (surahs.length === 0) {
+            loadData();
+        }
     }, []);
 
     const filteredSurahs = surahs.filter((surah: Surah) =>
@@ -50,7 +53,8 @@ export default function QuranScreen() {
     const renderSurahItem = ({ item, index }: { item: Surah, index: number }) => (
         <TouchableOpacity
             activeOpacity={0.9}
-            className="flex-1 m-1.5 aspect-square rounded-2xl overflow-hidden bg-[#1E293B] shadow-lg shadow-black/50 border border-white/5"
+            style={{ minHeight: 180 }}
+            className="flex-1 m-2 rounded-2xl overflow-hidden bg-[#1E293B] shadow-lg shadow-black/50 border border-white/5"
             onPress={() => router.push(`/surah/${item.id}`)}
         >
             {/* Background Image */}
@@ -66,10 +70,10 @@ export default function QuranScreen() {
                 className="absolute inset-0"
             />
 
-            <View className="flex-1 p-3 justify-between">
+            <View className="flex-1 p-4 justify-between">
                 {/* Top: Number Badge */}
                 <View className="flex-row justify-between items-start">
-                    <View className="w-7 h-7 rounded-lg bg-amber-500/20 items-center justify-center border border-amber-500/30">
+                    <View className="w-8 h-8 rounded-lg bg-amber-500/20 items-center justify-center border border-amber-500/30">
                         <Text className="text-amber-500 font-bold text-xs">{item.id}</Text>
                     </View>
                     <View className="w-6 h-6 rounded-full bg-white/10 items-center justify-center">
@@ -97,6 +101,7 @@ export default function QuranScreen() {
         return (
             <View className="flex-1 items-center justify-center bg-[#0F172A]">
                 <ActivityIndicator size="large" color="#F59E0B" />
+                <Text className="text-white/50 mt-4 font-medium">Loading Holy Quran...</Text>
             </View>
         );
     }
@@ -108,7 +113,7 @@ export default function QuranScreen() {
                 <Text className="text-gray-400 text-xs font-medium mb-5">Read and listen to the words of Allah</Text>
 
                 {/* Search Bar */}
-                <View className="flex-row items-center bg-[#1E293B] rounded-[20px] px-5 py-2.5 mb-3 border border-white/10">
+                <View className="flex-row items-center bg-[#1E293B] rounded-[22px] px-5 py-3 mb-3 border border-white/10 shadow-lg shadow-black/20">
                     <FontAwesome name="search" size={14} color="#F59E0B" />
                     <TextInput
                         className="flex-1 ml-3 text-white text-sm font-medium"
@@ -120,17 +125,35 @@ export default function QuranScreen() {
                 </View>
             </View>
 
-            <FlatList
-                data={filteredSurahs}
-                renderItem={renderSurahItem}
-                keyExtractor={(item) => item.id.toString()}
-                numColumns={2}
-                columnWrapperStyle={{ paddingHorizontal: 8 }}
-                contentContainerStyle={{ paddingBottom: 120, paddingTop: 8 }}
-                showsVerticalScrollIndicator={false}
-                initialNumToRender={12}
-                maxToRenderPerBatch={12}
-            />
+            {filteredSurahs.length === 0 && !loading ? (
+                <View className="flex-1 items-center justify-center p-10">
+                    <View className="w-20 h-20 rounded-full bg-[#1E293B] items-center justify-center mb-6">
+                        <FontAwesome name="book" size={32} color="#64748B" />
+                    </View>
+                    <Text className="text-white text-lg font-bold mb-2">No Surahs Found</Text>
+                    <Text className="text-gray-400 text-center mb-8">We couldn't load the Quran data. Please check your internet connection and try again.</Text>
+                    <TouchableOpacity
+                        onPress={loadData}
+                        activeOpacity={0.8}
+                        className="bg-amber-500 px-8 py-3.5 rounded-2xl shadow-lg shadow-amber-500/20"
+                    >
+                        <Text className="text-[#0F172A] font-black uppercase tracking-widest text-xs">Reload Quran</Text>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                <FlatList
+                    data={filteredSurahs}
+                    renderItem={renderSurahItem}
+                    keyExtractor={(item) => item.id.toString()}
+                    numColumns={2}
+                    columnWrapperStyle={{ paddingHorizontal: 12 }}
+                    contentContainerStyle={{ paddingBottom: 120, paddingTop: 8 }}
+                    showsVerticalScrollIndicator={false}
+                    initialNumToRender={10}
+                    maxToRenderPerBatch={10}
+                    windowSize={5}
+                />
+            )}
         </View>
     );
 }
