@@ -21,19 +21,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
         {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
         <style dangerouslySetInnerHTML={{ __html: responsiveBackground }} />
         {/* Add any additional <head> elements that you want globally available on web... */}
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            if ('serviceWorker' in navigator) {
-              window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                  console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, function(err) {
-                  console.log('ServiceWorker registration failed: ', err);
-                });
-              });
-            }
-          `
-        }} />
       </head>
       <body>{children}</body>
     </html>
