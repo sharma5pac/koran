@@ -1,3 +1,4 @@
+import LoadingSplash from '@/components/LoadingSplash';
 import { useQuranStore } from '@/store/useQuranStore';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
@@ -75,7 +76,7 @@ export default function RootLayout() {
   }, []);
 
   if (!loaded || !isStoreInitialized) {
-    return null;
+    return <LoadingSplash />;
   }
 
   return (

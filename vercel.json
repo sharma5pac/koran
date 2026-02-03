@@ -1,7 +1,8 @@
 {
+    "cleanUrls": true,
     "rewrites": [
         {
-            "source": "/((?!_expo|assets|favicon.ico|sw.js|manifest.json|manifest.webmanifest).*)",
+            "source": "/((?!_expo|assets|favicon|sw.js|manifest|robots.txt).*)",
             "destination": "/index.html"
         }
     ],
