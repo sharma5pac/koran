@@ -7,10 +7,23 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // We are temporarily trying the unused Firebase API key, but the User might need to generate a new one at aistudio.google.com if this fails.
 const API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY || "";
 
-const genAI = new GoogleGenerativeAI(API_KEY);
+const getModel = () => {
+    try {
+        if (!API_KEY) return null;
+        const genAI = new GoogleGenerativeAI(API_KEY);
+        return genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    } catch (e) {
+        console.error("AI Initialization Error:", e);
+        return null;
+    }
+};
 
-// Use gemini-1.5-flash which is the standard current model name
-export const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+// Lazily get the model inside the functions instead of top-level
+let cachedModel: any = null;
+const getCachedModel = () => {
+    if (!cachedModel) cachedModel = getModel();
+    return cachedModel;
+};
 
 /**
  * Explains a specific verse from the Quran.
@@ -23,6 +36,9 @@ export const explainVerse = async (surahName: string, verseNumber: number, verse
         const prompt = `You are a knowledgeable Quranic scholar. Provide a VERY BRIEF, short, and spiritual insight (Tafsir) for Verse ${verseNumber} of Surah ${surahName}. 
         Arabic Text: ${verseText}
         INSTRUCTION: Keep your response extremely concise (max 3 sentences). Focus only on the core spiritual wisdom or context.`;
+
+        const model = getCachedModel();
+        if (!model) return "Please add your Gemini API Key to continue.";
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
@@ -50,6 +66,9 @@ GUIDELINES:
 5. Aim for a total response length that is very brief and concise (max 1-2 small paragraphs).
 
 Question: ${question}`;
+
+        const model = getCachedModel();
+        if (!model) return "ERROR: No Gemini API Key found. Please add EXPO_PUBLIC_GEMINI_API_KEY to your environment variables.";
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
