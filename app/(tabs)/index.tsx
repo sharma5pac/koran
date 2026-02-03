@@ -1,6 +1,7 @@
 import SearchModal from '@/components/SearchModal';
 import { MOTIVATION_QUOTES } from '@/constants/quotes';
 import { useAuth } from '@/hooks/useAuth';
+import { usePWA } from '@/hooks/usePWA';
 import { getDuaOfTheDay } from '@/services/duaService';
 import { scheduleAllDailyReminders } from '@/services/notificationService';
 import { cancelPrayerNotifications, getPrayerTimes, requestPrayerPermissions, scheduleAdhanNotifications } from '@/services/prayerService';
@@ -35,6 +36,7 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
   const [nextPrayer, setNextPrayer] = useState<any>(null);
+  const { isInstallAvailable, showInstallPrompt } = usePWA();
 
   /* Carousel Logic - Ref-based to prevent re-render flickering */
   const carouselRef = React.useRef<FlatList>(null);
@@ -266,6 +268,25 @@ export default function HomeScreen() {
             <Text className="text-amber-500 text-sm font-bold">{prayerTimes?.hijri || '... LOADING'}</Text>
           </View>
         </View>
+
+        {/* PWA Install Banner */}
+        {isInstallAvailable && (
+          <TouchableOpacity
+            onPress={showInstallPrompt}
+            className="mb-8 p-4 rounded-[24px] bg-amber-500 flex-row items-center justify-between"
+          >
+            <View className="flex-row items-center flex-1">
+              <View className="w-10 h-10 rounded-full bg-white/20 items-center justify-center mr-3">
+                <FontAwesome name="download" size={18} color="white" />
+              </View>
+              <View>
+                <Text className="text-white font-bold text-sm">Save to Home Screen</Text>
+                <Text className="text-white/80 text-[10px]">Install NurQuran for faster access</Text>
+              </View>
+            </View>
+            <FontAwesome name="chevron-right" size={12} color="white" />
+          </TouchableOpacity>
+        )}
 
         {/* Prayer Times Card (New) */}
         <View className="mb-8 rounded-[28px] overflow-hidden shadow-2xl shadow-black/40 border border-white/10 h-32 bg-[#1E293B]">

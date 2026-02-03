@@ -43,7 +43,14 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "description": "Experience the Holy Quran with AI assistance, prayer times, and more.",
+      "themeColor": "#0F172A",
+      "backgroundColor": "#0F172A",
+      "display": "standalone",
+      "orientation": "portrait",
+      "name": "NurQuran",
+      "shortName": "NurQuran"
     },
     "plugins": [
       "expo-router",
