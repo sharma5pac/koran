@@ -1,24 +1,19 @@
+import { getGenerativeModel, getVertexAI } from "firebase/vertex-ai";
+import app from "./firebase";
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-// Initialize the Google Generative AI service
-// NOTE: This uses the direct Google AI API, which often has a free tier that doesn't strictly require a credit card in some regions/usages.
-// HOWEVER, it works best with a dedicated API Key from AI Studio.
-// We are temporarily trying the unused Firebase API key, but the User might need to generate a new one at aistudio.google.com if this fails.
-const API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY || "AIzaSyAHf3g0txo7u7C_3vruZVesTwHpKeOBfDY";
+// Initialize Vertex AI through Firebase
+const vertexAI = getVertexAI(app);
 
 const getModel = () => {
     try {
-        if (!API_KEY) return null;
-        const genAI = new GoogleGenerativeAI(API_KEY);
-        return genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // No more API key check needed here, it uses Firebase credentials
+        return getGenerativeModel(vertexAI, { model: "gemini-1.5-flash" });
     } catch (e) {
-        console.error("AI Initialization Error:", e);
+        console.error("Vertex AI Initialization Error:", e);
         return null;
     }
 };
 
-// Lazily get the model inside the functions instead of top-level
 let cachedModel: any = null;
 const getCachedModel = () => {
     if (!cachedModel) cachedModel = getModel();
@@ -27,9 +22,6 @@ const getCachedModel = () => {
 
 /**
  * Explains a specific verse from the Quran.
- * @param surahName Name of the Surah
- * @param verseNumber Verse number
- * @param verseText Arabic text of the verse
  */
 export const explainVerse = async (surahName: string, verseNumber: number, verseText: string) => {
     try {
@@ -39,17 +31,14 @@ export const explainVerse = async (surahName: string, verseNumber: number, verse
         MANDATORY: Respond in the same language used by the user in their request.`;
 
         const model = getCachedModel();
-        if (!model) return "Please add your Gemini API Key to continue.";
+        if (!model) return "AI service is currently unavailable. Please ensure Vertex AI is enabled in Firebase.";
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
         return response.text();
     } catch (error: any) {
         console.error('AI Explanation Error:', error);
-        if (error.message?.includes('API key not valid') || error.message?.includes('blocked')) {
-            return "Please create a free API Key at https://aistudio.google.com/app/apikey (no credit card needed) and update services/aiService.ts";
-        }
-        throw error;
+        return `I'm sorry, I'm having trouble with my knowledge base. (Error: ${error.message || 'Unknown'}). Please check if Vertex AI is enabled in your Firebase Console.`;
     }
 };
 
@@ -70,7 +59,7 @@ GUIDELINES:
 Question: ${question}`;
 
         const model = getCachedModel();
-        if (!model) return "ERROR: No Gemini API Key found. Please add EXPO_PUBLIC_GEMINI_API_KEY to your environment variables.";
+        if (!model) return "AI service is currently unavailable. Please ensure Vertex AI is enabled in Firebase.";
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
@@ -79,16 +68,10 @@ Question: ${question}`;
         console.error('AI Chat Error:', error);
         const errMsg = error.message || '';
 
-        if (errMsg.includes('API key not valid')) {
-            return "ERROR: Your Gemini API Key is invalid. Please update it in your Vercel Environment Variables or services/aiService.ts.";
-        }
-        if (errMsg.includes('429') || errMsg.includes('quota')) {
-            return "ERROR: AI Quota exceeded. Using the free tier? Try again in a minute, or check your usage at AI Studio.";
-        }
-        if (errMsg.includes('blocked') || errMsg.includes('safety')) {
-            return "ERROR: My apologies, but I cannot answer this specific question due to safety filters. Please ask something else.";
+        if (errMsg.includes('403') || errMsg.includes('permission')) {
+            return "ERROR: Access Denied. Have you enabled 'Vertex AI for Firebase' in your Firebase Console? It can take 5 minutes to activate.";
         }
 
-        return `I'm sorry, I'm having trouble connecting to my divine knowledge base. (Error: ${errMsg || 'Unknown error'}). Please try again or check your API key at aistudio.google.com.`;
+        return `I'm sorry, I'm having trouble connecting to my divine knowledge base. (Error: ${errMsg || 'Unknown error'}). Please try again or check your Firebase configuration.`;
     }
 };
