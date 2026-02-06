@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "NUR-QURAN",
-    "slug": "quran",
+    "name": "NurQuran - AI Quran Assistant",
+    "slug": "nurquran",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/nur_quran_logo_square.png",

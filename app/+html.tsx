@@ -12,6 +12,45 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
+        {/* Primary Meta Tags */}
+        <title>NurQuran - Experience the Holy Quran with AI assistance</title>
+        <meta name="title" content="NurQuran - Experience the Holy Quran with AI assistance" />
+        <meta name="description" content="Read and explore the Holy Quran with NurAI, your personal spiritual assistant. Features prayer times, Qibla tracker, and deep AI insights into every verse." />
+        <meta name="keywords" content="Quran, Al-Quran, Islam, AI Quran, Quran AI, NurAI, Holy Quran, Prayer Times, Qibla, Islamic App, Surah, Verse, Tafsir AI" />
+        <meta name="author" content="NurQuran Team" />
+        <meta name="robots" content="index, follow" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://nurquran-kappa.vercel.app/" />
+        <meta property="og:title" content="NurQuran - Experience the Holy Quran with AI" />
+        <meta property="og:description" content="Explore the wisdom of the Quran with NurAI. Prayer times, Qibla, and AI-powered spiritual insights." />
+        <meta property="og:image" content="https://nurquran-kappa.vercel.app/assets/images/nur_quran_logo_square.png" />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://nurquran-kappa.vercel.app/" />
+        <meta property="twitter:title" content="NurQuran - Experience the Holy Quran with AI" />
+        <meta property="twitter:description" content="Explore the wisdom of the Quran with NurAI. Prayer times, Qibla, and AI-powered spiritual insights." />
+        <meta property="twitter:image" content="https://nurquran-kappa.vercel.app/assets/images/nur_quran_logo_square.png" />
+
+        {/* Structured Data (JSON-LD) */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "NurQuran",
+            "operatingSystem": "Web, iOS, Android",
+            "applicationCategory": "EducationApplication, LifestyleApplication",
+            "description": "An interactive Holy Quran application with AI-powered spiritual insights, prayer times, and Qibla tracking.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          })
+        }} />
+
         {/* 
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native. 
           However, body scrolling is often nice to have for mobile web. If you want to enable it, remove this line.
