@@ -5,7 +5,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // NOTE: This uses the direct Google AI API, which often has a free tier that doesn't strictly require a credit card in some regions/usages.
 // HOWEVER, it works best with a dedicated API Key from AI Studio.
 // We are temporarily trying the unused Firebase API key, but the User might need to generate a new one at aistudio.google.com if this fails.
-const API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY || "";
+const API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY || "AIzaSyAHf3g0txo7u7C_3vruZVesTwHpKeOBfDY";
 
 const getModel = () => {
     try {
@@ -87,6 +87,6 @@ Question: ${question}`;
             return "ERROR: My apologies, but I cannot answer this specific question due to safety filters. Please ask something else.";
         }
 
-        return "I'm sorry, I'm having trouble connecting to my divine knowledge base right now. Please try again or check your API key.";
+        return `I'm sorry, I'm having trouble connecting to my divine knowledge base. (Error: ${errMsg || 'Unknown error'}). Please try again or check your API key at aistudio.google.com.`;
     }
 };
