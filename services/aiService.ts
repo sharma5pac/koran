@@ -35,7 +35,8 @@ export const explainVerse = async (surahName: string, verseNumber: number, verse
     try {
         const prompt = `You are a knowledgeable Quranic scholar. Provide a VERY BRIEF, short, and spiritual insight (Tafsir) for Verse ${verseNumber} of Surah ${surahName}. 
         Arabic Text: ${verseText}
-        INSTRUCTION: Keep your response extremely concise (max 3 sentences). Focus only on the core spiritual wisdom or context.`;
+        INSTRUCTION: Keep your response extremely concise (max 3 sentences). Focus only on the core spiritual wisdom or context.
+        MANDATORY: Respond in the same language used by the user in their request.`;
 
         const model = getCachedModel();
         if (!model) return "Please add your Gemini API Key to continue.";
@@ -64,6 +65,7 @@ GUIDELINES:
 3. Use blockquotes (>) for direct translations.
 4. IMPORTANT: Always format references as [[Surah Name:Verse Number]] (e.g., [[Surah Al-Baqarah:255]]).
 5. Aim for a total response length that is very brief and concise (max 1-2 small paragraphs).
+6. MANDATORY: Respond in the same language used by the user (e.g., if they ask in Arabic, reply in Arabic).
 
 Question: ${question}`;
 
