@@ -80,6 +80,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             }
           `
         }} />
+        {/* Vercel Web Analytics */}
+        <script dangerouslySetInnerHTML={{
+          __html: `window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };`
+        }} />
+        <script defer src="/_vercel/insights/script.js"></script>
       </head>
       <body>
         <noscript dangerouslySetInnerHTML={{
