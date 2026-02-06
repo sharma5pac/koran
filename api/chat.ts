@@ -1,5 +1,3 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 export const config = {
     runtime: 'edge',
 };
@@ -11,17 +9,38 @@ export default async function handler(req: Request) {
 
     try {
         const { prompt } = await req.json();
-        const API_KEY = process.env.GEMINI_API_KEY;
+        const API_KEY = process.env.GROQ_API_KEY;
 
         if (!API_KEY) {
-            return new Response(JSON.stringify({ error: 'GEMINI_API_KEY not configured on Vercel.' }), { status: 500 });
+            return new Response(JSON.stringify({ error: 'GROQ_API_KEY not configured on Vercel.' }), { status: 500 });
         }
 
-        const genAI = new GoogleGenerativeAI(API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${API_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile",
+                messages: [
+                    {
+                        role: "user",
+                        content: prompt
+                    }
+                ],
+                temperature: 0.7,
+                max_tokens: 1024,
+            }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error?.message || 'Groq API error');
+        }
+
+        const data = await response.json();
+        const text = data.choices[0]?.message?.content || "No response from AI.";
 
         return new Response(JSON.stringify({ text }), {
             status: 200,
