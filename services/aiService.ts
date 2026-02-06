@@ -1,24 +1,9 @@
-import { getGenerativeModel, getVertexAI } from "firebase/vertex-ai";
-import app from "./firebase";
-
-// Initialize Vertex AI through Firebase
-const vertexAI = getVertexAI(app);
-
-const getModel = () => {
-    try {
-        // No more API key check needed here, it uses Firebase credentials
-        return getGenerativeModel(vertexAI, { model: "gemini-1.5-flash" });
-    } catch (e) {
-        console.error("Vertex AI Initialization Error:", e);
-        return null;
-    }
-};
-
-let cachedModel: any = null;
-const getCachedModel = () => {
-    if (!cachedModel) cachedModel = getModel();
-    return cachedModel;
-};
+/**
+ * NurAI Chat Service
+ * 
+ * This service now uses a secure backend proxy (/api/chat) to talk to Gemini.
+ * This prevents our API keys from being visible in the browser/frontend code.
+ */
 
 /**
  * Explains a specific verse from the Quran.
@@ -30,15 +15,22 @@ export const explainVerse = async (surahName: string, verseNumber: number, verse
         INSTRUCTION: Keep your response extremely concise (max 3 sentences). Focus only on the core spiritual wisdom or context.
         MANDATORY: Respond in the same language used by the user in their request.`;
 
-        const model = getCachedModel();
-        if (!model) return "AI service is currently unavailable. Please ensure Vertex AI is enabled in Firebase.";
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt }),
+        });
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        return response.text();
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to connect to AI');
+        }
+
+        const data = await response.json();
+        return data.text;
     } catch (error: any) {
         console.error('AI Explanation Error:', error);
-        return `I'm sorry, I'm having trouble with my knowledge base. (Error: ${error.message || 'Unknown'}). Please check if Vertex AI is enabled in your Firebase Console.`;
+        return `I'm sorry, I'm having trouble with my knowledge base. (Error: ${error.message || 'Unknown'}).`;
     }
 };
 
@@ -58,20 +50,23 @@ GUIDELINES:
 
 Question: ${question}`;
 
-        const model = getCachedModel();
-        if (!model) return "AI service is currently unavailable. Please ensure Vertex AI is enabled in Firebase.";
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt }),
+        });
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        return response.text();
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to connect to AI');
+        }
+
+        const data = await response.json();
+        return data.text;
     } catch (error: any) {
         console.error('AI Chat Error:', error);
         const errMsg = error.message || '';
 
-        if (errMsg.includes('403') || errMsg.includes('permission')) {
-            return "ERROR: Access Denied. Have you enabled 'Vertex AI for Firebase' in your Firebase Console? It can take 5 minutes to activate.";
-        }
-
-        return `I'm sorry, I'm having trouble connecting to my divine knowledge base. (Error: ${errMsg || 'Unknown error'}). Please try again or check your Firebase configuration.`;
+        return `I'm sorry, I'm having trouble connecting to my divine knowledge base. (Error: ${errMsg || 'Unknown error'}). Please check your Vercel Environment Variables if this persists.`;
     }
 };

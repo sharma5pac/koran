@@ -2,7 +2,7 @@
     "cleanUrls": true,
     "rewrites": [
         {
-            "source": "/((?!_expo|assets|favicon|sw.js|manifest|robots.txt).*)",
+            "source": "/((?!api/|_expo|assets|favicon|sw.js|manifest|robots.txt).*)",
             "destination": "/index.html"
         }
     ],
